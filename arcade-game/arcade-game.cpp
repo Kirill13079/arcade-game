@@ -1,4 +1,6 @@
 ﻿#include <iostream>
+#include <windows.h>
+#include <conio.h>
 
 using namespace std;
 
@@ -10,6 +12,8 @@ int posHeroColumn = 1;
 
 const int rows = 10;
 const int columns = 20;
+
+bool isGameRunning = true;
 
 char map[rows][columns];
 
@@ -84,10 +88,62 @@ void generateBarriers()
 	}
 }
 
+bool moveHeroRight()
+{
+	bool result = true;
+
+	int nextColumn = posHeroColumn + 1;
+
+	if (map[posHeroRow][nextColumn] == ' ')
+	{
+		posHeroColumn = nextColumn;
+		map[posHeroRow][posHeroColumn] = hero;
+	}
+
+	return result;
+}
+
+bool moveHeroLeft()
+{
+	bool result = true;
+
+	int previosColumn = posHeroColumn - 1;
+
+	if (map[posHeroRow][previosColumn] == ' ')
+	{
+		posHeroColumn = previosColumn;
+		map[posHeroRow][posHeroColumn] = hero;
+	}
+
+	return result;
+}
+
 int main()
 {
-	generateMap();
-	generateHero();
-	generateBarriers();
-	draw();
+	while (isGameRunning)
+	{
+		system("cls");
+
+		generateMap();
+		generateHero();
+		generateBarriers();
+		draw();
+
+		if (_kbhit())
+		{
+			switch (_getch())
+			{
+			case 'd':
+				isGameRunning = moveHeroRight();
+				break;
+			case 'a':
+				isGameRunning = moveHeroLeft();
+				break;
+			}
+		}
+
+		Sleep(100);
+	}
+
+	system("pause");
 }
